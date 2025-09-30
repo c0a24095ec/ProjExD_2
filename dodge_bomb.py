@@ -54,6 +54,16 @@ def gameover(screen: pg.Surface) -> None:
     time.sleep(5)   
 
 
+def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    bb_imgs = []
+    bb_accs = [a for a in range(1, 11)]
+    for r in range(1, 11):
+        bb_img = pg.Surface((20*r, 20*r), pg.SRCALPHA)  #透過対応Surface
+        pg.draw.circle(bb_img, (255, 0, 0, 180), (10*r, 10*r), 10*r)
+        bb_imgs.append(bb_img)
+        bb_accs.append(r)  #加速度は1,2,...,10
+    return bb_imgs, bb_accs
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -70,6 +80,7 @@ def main():
     vx, vy = +5, +5  #爆弾の速度
     clock = pg.time.Clock()
     tmr = 0
+    bb_imgs, bb_accs = init_bb_imgs()
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -106,6 +117,14 @@ def main():
         pg.display.update()
         tmr += 1
         clock.tick(50)
+        idx = min(tmr // 500, 9)
+        bb_img = bb_imgs[idx]
+        acc = bb_accs[idx]
+        avx = vx * acc
+        avy = vy * acc
+        bb_rct.move_ip(avx, avy)
+        avx = vx*bb_accs[min(tmr//500, 9)]
+        bb_img = bb_imgs[min(tmr//500, 9)]
 
 
 if __name__ == "__main__":
