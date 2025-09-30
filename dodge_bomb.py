@@ -1,3 +1,4 @@
+import time
 import os
 import random
 import sys
@@ -35,7 +36,6 @@ def gameover(screen: pg.Surface) -> None:
     Game Over画面を5秒間表示する
     こうかとん画像を左右2つ表示する
     """
-    import time
     gameover_img = pg.Surface((WIDTH, HEIGHT))
     gameover_img.set_alpha(200)  # 透明度設定
     gameover_img.fill((0, 0, 0))  # 黒で塗りつぶし
