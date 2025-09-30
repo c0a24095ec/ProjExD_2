@@ -64,6 +64,22 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         bb_accs.append(r)  #加速度は1,2,...,10
     return bb_imgs, bb_accs
 
+
+def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    kk_dict = {
+        (0, 0): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9), True, False),      # キー押下がない場合
+        (0, -5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 270, 0.9), True, False),     # 上
+        (+5, -5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 315, 0.9), True, False),   # 右上
+        (+5, 0): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9), True, False),    # 右
+        (+5, +5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 0.9), True, False),  # 右下
+        (0, +5): pg.transform.flip(pg.transform.rotozoom(pg.image.load("fig/3.png"), 90, 0.9), True, False),   # 下
+        (-5, +5): pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 0.9),  # 左下
+        (-5, 0): pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 0.9),   # 左
+        (-5, -5): pg.transform.rotozoom(pg.image.load("fig/3.png"), 315, 0.9),  # 左上
+    }
+    return kk_dict
+
+
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -81,6 +97,7 @@ def main():
     clock = pg.time.Clock()
     tmr = 0
     bb_imgs, bb_accs = init_bb_imgs()
+    kk_imgs = get_kk_imgs()
     while True:
         for event in pg.event.get():
             if event.type == pg.QUIT: 
@@ -125,6 +142,7 @@ def main():
         bb_rct.move_ip(avx, avy)
         avx = vx*bb_accs[min(tmr//500, 9)]
         bb_img = bb_imgs[min(tmr//500, 9)]
+        kk_img = kk_imgs[tuple(sum_mv)]
 
 
 if __name__ == "__main__":
