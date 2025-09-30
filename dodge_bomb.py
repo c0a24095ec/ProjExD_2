@@ -29,6 +29,29 @@ def check_bound(rct: pg.Rect) -> tuple[bool, bool]:
     return yoko, tate
 
 
+def gameover(screen: pg.Surface) -> None:
+    import time
+    gameover_img = pg.Surface((WIDTH, HEIGHT))
+    gameover_img.set_alpha(200)  # 透明度設定
+    gameover_img.fill((0, 0, 0))  # 黒で塗りつぶし
+
+    # 白文字でGame Over
+    font = pg.font.Font(None, 60)
+    text_surf = font.render("Game Over", True, (255, 255, 255))
+    text_rect = text_surf.get_rect(center=(WIDTH/2, HEIGHT/2-100))
+    gameover_img.blit(text_surf, text_rect)
+
+    # こうかとん画像を左右2つ表示
+    kk_img = pg.transform.rotozoom(pg.image.load("fig/8.png"), 0, 0.9)
+    kk_rect_left = kk_img.get_rect(center=(WIDTH/2-150, HEIGHT/2-100))
+    kk_rect_right = kk_img.get_rect(center=(WIDTH/2+150, HEIGHT/2-100))
+    gameover_img.blit(kk_img, kk_rect_left)
+    gameover_img.blit(kk_img, kk_rect_right)
+
+    # 1のSurfaceをscreenにblit
+    screen.blit(gameover_img, (0, 0))
+    pg.display.update()
+    time.sleep(5)   
 
 
 def main():
@@ -53,6 +76,7 @@ def main():
                 return
         screen.blit(bg_img, [0, 0]) 
         if kk_rct.colliderect(bb_rct):  #こうかとんと爆弾の衝突判定
+            gameover(screen)
             return  #ゲームオーバー
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
